@@ -1,0 +1,123 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# iOS/XCode related
+ios/Pods/
+ios/Podfile.lock
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+ios/Runner.xcodeproj/xcuserdata/
+
+# Web related
+web/.dart_tool/
+
+# Windows related
+windows/.dart_tool/
+windows/flutter/ephemeral/
+
+# Linux related
+linux/.dart_tool/
+linux/flutter/ephemeral/
+
+# macOS related
+macos/.dart_tool/
+macos/Flutter/ephemeral/
+macos/Pods/
+
+# Coverage
+coverage/
+
+# FVM (Flutter Version Management)
+.fvm/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# AI Tool Metadata (should not be committed)
+.ruflo-setup/
+.claude/
+.claude-flow/
+.agents/
+.swarm/
+.kiro/
+.mcp.json
+
+# Node.js (if present)
+node_modules/
+package-lock.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Log files
+*.log
+f_logs.txt
+analysis.txt
+analysis_report.txt
+api_test_results.txt
+results.txt
+final_check.txt
+
+# Test files and documentation (project-specific)
+test_*.js
+*_test_*.js
+ADMOB_*.md
+APP_FEATURES_*.md
+TALK_BACK_TEST_PLAN.md
+UI_UX_DESIGN_AUDIT.md
+TODO.md
+task.md
+implement.md
+
+# Temporary and cache files
+skills-lock.json
+*.bat
+list_recent.dart
+advanced_chunked_playback_examples.dart
+test_apis.dart

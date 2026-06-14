@@ -1,0 +1,77 @@
+location:[C:\Users\shour\OneDrive\Desktop\flutter practise\voice_assistant_app\assets\sounds,C:\Users\shour\OneDrive\Desktop\flutter practise\voice_assistant_app\assets\sounds\game_sounds and C:\Users\shour\OneDrive\Desktop\flutter practise\voice_assistant_app\assets\sounds\game_sounds\nature]
+my suggestions where best fit sound effects can be used for games and as for in app screens:
+
+click and select
+button1.mp3,click_enter.mp3,mainmenu_mouseover.mp3,menuclick.mp3,SelectAtom.mp3
+
+UI Menu Mouse hover:
+UI Menu Mousehover 02.mp3
+
+puzzle is solved:
+Puzzle_Solved.mp3
+
+tile movement,for any move sound:
+Tile Moving 02.mp3,Tile Moving 02d.mp3,panelslide1.mp3,
+
+wrong answer:
+warning1.mp3,wrong-ans.mp3,fart-voice.mp3,pig-squeak.mp3,
+
+TimesRunningOut:
+Time_Up.mp3,TimesRunningOut.mp3,air-horn.mp3,bell-ring.mp3,
+
+TimesRunningOut(10 sec left):
+heart-beat-10sec-timer.mp3
+
+welcome(short):
+dream-sound.mp3,
+
+request to undo a move to the user as saying A.I as to give a hint:
+going-in-reverse.mp3,horse-snort.mp3,scary-sound.mp3,puppy-whimpering.mp3,
+
+when a user plays a unexpected move where he/she was in a sitution from where he can loose but managed to survive at last: 
+or 
+User Bounces back in the Game where he was not playing well but now started playing well/sets good moves:
+
+reverse1.mp3,level_change_2.mp3,Good.mp3,hmmm-sound.mp3,keep-quite.mp3,tiger-roar.mp3,wow.mp3,bear-growl.mp3,
+
+User collects points or money for right anwser:
+Incredible.mp3,excellent1.mp3,clearcoins.mp3,clearcoins2.mp3,clearcoins3.mp3,right-ans.mp3,dog-bark.mp3,
+
+User collects points or money gets deducted for wrong anwser or get ready for bad move consequences:
+setting-statement.mp3,
+
+wake up user if user taking to much time to input a move or a response:
+Go.mp3,rooster-cry.mp3,wolf-howl.mp3,bird-sound.mp3,dog-pant.mp3
+
+entered into new level or world:
+whoosh.mp3,
+
+User wins a level:
+congratulations-message-notification.mp3,A_New_High_Score.mp3,level_change_1.mp3,Level_Complete.mp3,Pixelus Puzzle Completed Sting v01.mp3,Pixelus Temple Completed Sting v01.mp3,
+
+User wins all levels of a game and completed it:
+Firework Explosion 01.mp3,Firework Explosion 03.mp3,Firework Explosion 04.mp3,
+
+Crowd cheer's for good move played by the User:
+crowd-cheer.mp3,Crowd Applause 01.mp3,Crowd Applause 02.mp3,Crowd Applause 04.mp3,Firework Explosion 05.mp3,Firework Explosion 06.mp3,Firework Explosion 07.mp3
+
+Crowd cheer's for the bad move played by the User:
+Crowd Oohs 04c.mp3,Crowd Oohs 05.mp3,Crowd Oohs 07b.mp3,Crowd Oohs 08b.mp3,Crowd Oohs 11.mp3
+
+nature can be set as serene sounds:
+Coastal.mp3,Forest.mp3,Ocean Surf.mp3,Rain Leaves.mp3,Waterfall.mp3
+
+Game background music(short at max 10 sec):
+Tubetricks Menu One v02 A.mp3,Tubetricks Sting Two v01.mp3,
+
+Game background music(long more than 30 sec):
+chinese_map.mp3,fairy_tale_level.mp3,
+
+User tries to quite a game in between or by playing a last and final move which is a worng move and the game is over for him:
+Game_Over.mp3,Goodbye.mp3,No_More_Moves.mp3,
+
+User enter into a game/level and anticipates the game to start:
+slowdown1.mp3,Get_ready.mp3,Pixelus Start of Puzzle v02.mp3,Pixelus Inside Temple v01.mp3
+
+When user wants a hint:
+mama1.mp3,mama2.mp3,Pixelus Hint Screen v01.mp3,Pixelus Temple Screen v01.mp3,
