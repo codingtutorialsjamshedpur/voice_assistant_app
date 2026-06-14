@@ -57,7 +57,7 @@ class _VoiceAssistantGameScreenState extends State<VoiceAssistantGameScreen>
     super.initState();
 
     // ----- FIX 1: Complete Reset of Voice Chat AI Services Via Central Architecture -----
-    VoiceSessionRestorationManager.to.restore();
+    unawaited(VoiceSessionRestorationManager.to.restore());
 
     // ── Mark game screen as active so idle-prompt TTS is suppressed ──────────
     // VoiceChatScreen idle-poke timer keeps running in the background;
