@@ -474,6 +474,36 @@ class STTService extends GetxService {
     return isInitialized.value;
   }
 
+  /// Verify that STT is fully initialized and microphone hardware is accessible.
+  /// Used by VoiceSessionRestorationManager to confirm recovery success.
+  Future<bool> verifyReadiness() async {
+    debugPrint('🔍 [STTService] Verifying hardware readiness...');
+
+    // 1. Check native initialization state
+    if (!isInitialized.value) {
+      debugPrint('❌ [STTService] Readiness Check: Not initialized');
+      return false;
+    }
+
+    // 2. Verify microphone permission state
+    final permStatus = await Permission.microphone.status;
+    if (!permStatus.isGranted) {
+      debugPrint('❌ [STTService] Readiness Check: Permission not granted ($permStatus)');
+      return false;
+    }
+
+    // 3. Confirm SpeechRecognizer is not in a crashed/locked state
+    // Note: SpeechToText doesn't have a direct isError property.
+    // We rely on the isInitialized value and status.value being neutral.
+    if (status.value.toLowerCase().contains('error')) {
+      debugPrint('❌ [STTService] Readiness Check: SpeechRecognizer in error state (${status.value})');
+      return false;
+    }
+
+    debugPrint('✅ [STTService] Hardware readiness VERIFIED');
+    return true;
+  }
+
   /// Mark the audio session as stale due to WebView media focus steal.
   ///
   /// Call this SYNCHRONOUSLY from any screen that takes exclusive Android
@@ -499,6 +529,9 @@ class STTService extends GetxService {
   }) async {
     debugPrint(
         '🔄 [STTService] Starting reinitialize (maxAttempts=$maxAttempts)...');
+
+    // Requirement 1: Reinitialize microphone permissions
+    await requestPermission();
 
     // Clear any stale flag — this reinit makes the session fresh.
     _audioSessionStale = false;

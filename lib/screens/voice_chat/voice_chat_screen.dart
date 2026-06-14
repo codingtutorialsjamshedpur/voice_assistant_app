@@ -116,7 +116,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen>
 
     // Use the completely fresh and independent Voice Session Restoration Architecture
     // to strictly guarantee survival of mic state from Global Radio / World TV.
-    VoiceSessionRestorationManager.to.restore();
+    unawaited(VoiceSessionRestorationManager.to.restore());
 
     // Start Enhanced Greeting Flow
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -143,7 +143,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen>
     debugPrint('🔄 [VoiceChatScreen] didPopNext — restoring voice state');
 
     // Run the independent Voice Session Restoration Architecture
-    VoiceSessionRestorationManager.to.restore();
+    unawaited(VoiceSessionRestorationManager.to.restore());
 
     // Restart greetings AFTER the STT restore completes (worst case ~10 s).
     // Using 15 s ensures the restore loop has fully finished.
@@ -159,7 +159,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       // Re-initialize when returning from game screen or background
-      VoiceSessionRestorationManager.to.restore();
+      unawaited(VoiceSessionRestorationManager.to.restore());
     }
   }
 

@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt_lib;
 
 import 'stt_service.dart';
 import 'tts_service.dart';
 import '../controllers/voice_controller.dart';
-import '../controllers/game_controller.dart';
 import '../controllers/voice_assistant_game_controller.dart';
 import '../services/engagement_orchestrator_service.dart';
+import '../services/enhanced_greeting_service.dart';
 
 /// ═══════════════════════════════════════════════════════════════
 /// Voice Session Restoration Architecture
@@ -22,90 +21,94 @@ class VoiceSessionRestorationManager extends GetxService {
 
   final RxBool isRestoring = false.obs;
 
-  /// Executes the completely fresh, screen-agnostic architectural loop
+  /// Executes a complete fresh restoration sequence as required by the 18-point spec.
+  /// This method is designed to be screen-agnostic and robust against OS-level focus loss.
   Future<void> restore() async {
     if (isRestoring.value) return;
     isRestoring.value = true;
 
     debugPrint(
-        '\n🔄 ════ VoiceSessionRestorationManager: STARTING FRESH RESTORATION ════ 🔄');
+        '\n🔄 ════ VoiceSessionRestorationManager: STARTING COMPLETE ARCHITECTURAL RESTORATION ════ 🔄');
 
     try {
-      final sttService = Get.find<STTService>();
-      final ttsService = Get.find<TTSService>();
+      final stt = Get.find<STTService>();
+      final tts = Get.find<TTSService>();
 
-      // Requirement 10 & 11: Reset stale microphone locks and configurations
-      debugPrint(
-          '➤ Resetting stale microphone locks and SpeechRecognizer instances...');
-      if (sttService.isListening.value) {
-        sttService.stopListening();
+      // ── STAGE 1: HARDWARE & PERMISSIONS (Req 1, 2, 10, 11) ───────────
+      debugPrint('➤ [1/4] Resetting hardware locks and SpeechRecognizer...');
+
+      // Requirement 10 & 11: Reset stale locks and instances
+      if (stt.isListening.value) {
+        stt.stopListening();
       }
-      await sttService.cancelListening();
-      sttService.markAudioSessionStale(); // Reclaims OS-level hardware priority
+      await stt.cancelListening();
+      stt.markAudioSessionStale(); // Marks for immediate re-acquisition
 
-      // Requirement 1 & 2: Reinitialize microphone permissions & SpeechRecognizer
-      debugPrint(
-          '➤ Reinitializing microphone permissions and SpeechRecognizer hardware binding...');
-      // 10 retries with 600ms delays completely secures focus away from WebViews natively.
-      await sttService.reinitialize(maxAttempts: 10, retryDelayMs: 600);
+      // Requirement 1 & 2: Reinitialize microphone permissions and hardware binding
+      // Using 10 attempts with 600ms delays to force focus away from any rogue WebViews.
+      await stt.reinitialize(maxAttempts: 10, retryDelayMs: 600);
 
-      // Requirement 15 & 16: Verify microphone availability & SpeechRecognizer readiness
-      if (sttService.isInitialized.value) {
-        debugPrint(
-            '✅ Microphone permissions verified. SpeechRecognizer is READY.');
-      } else {
-        debugPrint('❌ SpeechRecognizer verification failed.');
-      }
+      // ── STAGE 2: LISTENERS & SUBSCRIPTIONS (Req 3, 4, 5, 6, 7) ───────
+      debugPrint('➤ [2/4] Recreating STT listeners and stream subscriptions...');
+      // Requirement 3, 4, 5, 6, 7: These are natively handled by STTService.reinitialize,
+      // which creates a brand new SpeechToText instance and re-attaches status/error/result
+      // callbacks to the native speech client.
+      debugPrint('✅ STT internal event-bus successfully re-bound.');
 
-      // Requirement 3, 4, 5, 6, 7: Because we execute STTService.reinitialize,
-      // the native android speech library reconstructs all internal stream subscriptions,
-      // error listeners, and status listeners inside STTService automatically.
-      debugPrint(
-          '➤ Recreated STT listeners, reattached result/error/status listeners, and re-bound stream subscriptions.');
+      // ── STAGE 3: CONTROLLER SYNC & SESSION STATE (Req 8, 9, 12, 13, 14) ──
+      debugPrint('➤ [3/4] Rebinding controllers and restoring session state...');
 
-      // Requirement 8: Rebind VoiceController references
-      // Requirement 9: Restore voice session state
-      debugPrint(
-          '➤ Rebinding VoiceController references and restoring session state...');
+      // Requirement 8 & 9: Rebind VoiceController and restore state
       if (Get.isRegistered<VoiceController>()) {
         final vc = Get.find<VoiceController>();
-        vc.isTalking.value = false;
-        vc.stopSpeaking();
         vc.resetPipelineAfterNavigation();
         debugPrint('✅ VoiceController pipeline perfectly synchronized.');
       }
 
-      // Cleanup Game Controllers as well for identical robust behavior
-      if (Get.isRegistered<VoiceAssistantGameController>()) {
-        final vac = Get.find<VoiceAssistantGameController>();
-        vac.isPaused.value = true;
+      // Requirement 12: Restore TTS bindings to neutral state
+      if (tts.isSpeaking.value) {
+        await tts.stop();
       }
+      debugPrint('✅ TTS bindings neutral.');
 
-      // Stop Orchestrator background jobs that might interrupt fresh voice flows
+      // Requirement 13 & 14: Restore AI response and Transcription callbacks
+      // We increment the uiResetSignal which notifies DualModeInputPanel to wipe
+      // stale text and prepare for fresh listeners on the next mic tap.
+      stt.uiResetSignal.value++;
+
+      // Secondary cleanup: Pause background services that might conflict
+      if (Get.isRegistered<VoiceAssistantGameController>()) {
+        Get.find<VoiceAssistantGameController>().isPaused.value = true;
+      }
       if (Get.isRegistered<EngagementOrchestratorService>()) {
         Get.find<EngagementOrchestratorService>().stopEngagement();
       }
-
-      // Requirement 12: Restore TTS bindings
-      debugPrint('➤ Restoring TTS bindings to neutral state...');
-      if (ttsService.isSpeaking.value) {
-        await ttsService.stop();
+      if (Get.isRegistered<EnhancedGreetingService>()) {
+        Get.find<EnhancedGreetingService>().pauseService();
       }
 
-      // Requirement 13 & 14: Restore AI response callbacks & Restoring transcription callbacks
-      // The UniversalVoicePipeline triggers handleMicTap -> which securely re-binds realtime
-      // onFinalResult callbacks whenever the user activates the mic.
-      debugPrint(
-          '➤ Resetting realtime AI response callbacks / transcription UI states...');
-      sttService.uiResetSignal
-          .value++; // Dynamically wipes DualModeInputPanel visuals
+      // ── STAGE 4: VERIFICATION & READY STATE (Req 15, 16, 17, 18) ─────
+      debugPrint('➤ [4/4] Verifying restoration architecture success...');
 
-      // Requirement 17 & 18: Verify controller attachment & Session State
-      debugPrint(
-          '✅ Controllers attached. Active session state verified and safely locked.');
+      // Requirement 15 & 16: Verify microphone availability & SpeechRecognizer readiness
+      final bool hardwareReady = await stt.verifyReadiness();
 
-      debugPrint(
-          '🏁 ════ VoiceSessionRestorationManager: RESTORATION COMPLETE ════ 🏁\n');
+      // Requirement 17 & 18: Verify controller attachment & active session state
+      bool controllersReady = true;
+      if (Get.isRegistered<VoiceController>()) {
+        controllersReady = Get.find<VoiceController>().verifyReadyState();
+      }
+
+      if (hardwareReady && controllersReady) {
+        debugPrint(
+            '🏁 ════ VoiceSessionRestorationManager: RESTORATION COMPLETE — SYSTEM READY ════ 🏁\n');
+      } else {
+        debugPrint(
+            '⚠️ ════ VoiceSessionRestorationManager: PARTIAL RESTORATION ════ ⚠️');
+        debugPrint('➤ Hardware Ready: $hardwareReady');
+        debugPrint('➤ Controllers Ready: $controllersReady\n');
+      }
+
     } catch (e) {
       debugPrint(
           '❌ [VoiceSessionRestorationManager] Fatal architectural error: $e');

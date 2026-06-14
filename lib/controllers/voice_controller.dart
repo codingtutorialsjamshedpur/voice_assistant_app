@@ -1796,8 +1796,27 @@ SPECIAL FEATURES:
       progressiveWordCount.value = 99999;
     }
 
+    // 9. Reset selection mode if it was active
+    isSelectionMode.value = false;
+    selectedMessageIds.clear();
+
+    // 10. Clear UI text input to avoid stale text from before navigation
+    textController.clear();
+
     debugPrint(
         '✅ [VoiceController] Pipeline reset complete — ready for new query');
+  }
+
+  /// Verify that VoiceController is in a neutral, ready state.
+  /// Used by VoiceSessionRestorationManager to confirm recovery success.
+  bool verifyReadyState() {
+    final bool isReady = !isLoading.value &&
+        !_isSpeakBusy &&
+        !isTalking.value &&
+        currentSpeakingMessageId.value.isEmpty;
+
+    debugPrint('🔍 [VoiceController] Readiness Check: $isReady');
+    return isReady;
   }
 
   /// Stop speaking (all engines)
